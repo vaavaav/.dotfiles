@@ -1,0 +1,149 @@
+set $mod Mod4
+set $wm_setting_key_left h
+set $wm_setting_key_right l
+set $wm_setting_key_up k
+set $wm_setting_key_down j
+
+set $wallpaper feh --bg-fill --randomize ~/.wallpapers
+
+# Applications
+bindsym $mod+Return exec alacritty
+bindsym $mod+d exec rofi -show drun -icon-theme \"Papirus\" -show-icons 
+bindsym $mod+b exec $wallpaper
+bindsym $mod+Shift+s exec flameshot gui
+bindsym $mod+t exec picom-trans -c -t
+
+exec --no-startup-id picom
+exec --no-startup-id polybar mybar
+exec --no-startup-id nm-applet
+exec --no-startup-id $wallpaper
+
+# Gaps
+gaps inner 6
+gaps outer 3
+
+# Borders
+default_border none
+floating_modifier $mod
+
+# switch to workspace
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1  "1"
+set $ws2  "2"
+set $ws3  "3"
+set $ws4  "4"
+set $ws5  "5"
+set $ws6  "6"
+set $ws7  "7"
+set $ws8  "8"
+set $ws9  "9"
+set $ws10 "10"
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# restart i3 inplace (preserves your layout/session, can be used to update i3)
+bindsym $mod+Shift+r restart
+
+# Backlight control
+bindsym XF86MonBrightnessUp   exec brightnessctl set +10%
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+
+# change focus
+bindsym $mod+$wm_setting_key_left  focus left
+bindsym $mod+$wm_setting_key_down  focus down
+bindsym $mod+$wm_setting_key_up    focus up
+bindsym $mod+$wm_setting_key_right focus right
+
+# move focused window
+bindsym $mod+Shift+$wm_setting_key_left  move left
+bindsym $mod+Shift+$wm_setting_key_down  move down
+bindsym $mod+Shift+$wm_setting_key_up    move up
+bindsym $mod+Shift+$wm_setting_key_right move right
+
+# Resize
+mode "resize" {
+  bindsym $wm_setting_key_left  resize shrink width 5 px or 5 ppt
+  bindsym $wm_setting_key_down  resize shrink height 5 px or 5 ppt
+  bindsym $wm_setting_key_up    resize grow   height 5 px or 5 ppt
+  bindsym $wm_setting_key_right resize grow   width  5 px or 5 ppt
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# split in horizontal orientation
+bindsym $mod+Ctrl+h split h
+
+# split in vertical orientation
+bindsym $mod+Ctrl+v split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen toggle
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+g layout tabbed
+bindsym $mod+e layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# sound
+bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume @DEFAULT_SINK@ +5%"
+bindsym XF86AudioLowerVolume exec "pactl set-sink-volume @DEFAULT_SINK@ -5%"
+bindsym XF86AudioMute exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+bindsym XF86AudioMicMute exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+
+# music
+bindsym $mod+XF86AudioMute exec "playerctl play-pause"
+bindsym $mod+XF86AudioLowerVolume exec "playerctl previous"
+bindsym $mod+XF86AudioRaiseVolume exec "playerctl next"
+
+# display
+bindsym XF86Display exec (( xrandr | grep -q 'DP-1 connected' ) && ( xrandr --output eDP-1 --primary --mode 1920x1200 --pos 320x1440 --rotate normal --output DP-1 --auto --mode 2560x1440 --pos 0x0 --rotate normal ) || ( xrandr --output eDP-1 --primary --mode 1920x1200 --pos 320x1440 --rotate normal --output DP-1 --off)) && $wallpaper
+
+# Define colors variables:
+set $wm_color_border_active_bg   #26bbd9
+set $wm_color_border_active_fg   #e3e6ee
+set $wm_color_border_inactive_bg #26bbd9
+set $wm_color_border_inactive_fg #26bbd9
+
+## Floating notifications
+for_window [window_role="alert"] floating enable, border none, no_title_bar, focus disable
+for_window [window_role="alert"] move position center right 50%
+for_window [window_role="alert"] move resize width 25% height 20%
+
+# Miscellaneous settings 
+font Iosevka 12
